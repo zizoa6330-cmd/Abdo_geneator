@@ -1,1 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>عبدو جينيرايتور</title>
+<style>
+  :root{
+    --bg:#0f1117; --card:#181b25; --accent:#7c5cff; --accent2:#ff5ca8;
+    --text:#f2f2f7; --muted:#9a9db0; --border:#2a2e3d;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+    background:linear-gradient(160deg,var(--bg),#161a24);
+    color:var(--text); display:flex; align-items:center; justify-content:center;
+    padding:24px; padding-top:calc(24px + env(safe-area-inset-top,0px));
+    padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));
+  }
+  .card{
+    width:100%; max-width:560px; background:var(--card);
+    border:1px solid var(--border); border-radius:18px; padding:28px;
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+  }
+  h1{margin:0 0 6px; font-size:22px; background:linear-gradient(90deg,var(--accent),var(--accent2));
+     -webkit-background-clip:text; background-clip:text; color:transparent;}
+  p.sub{margin:0 0 20px; color:var(--muted); font-size:14px}
+  label.small{display:block; font-size:12px; color:var(--muted); margin:14px 0 6px}
+  textarea{
+    width:100%; min-height:80px; resize:vertical; padding:12px 14px;
+    border-radius:12px; border:1px solid var(--border); background:#12141d;
+    color:var(--text); font-size:15px; font-family:inherit; outline:none;
+  }
+  textarea:focus{border-color:var(--accent)}
+  .row{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap}
+  select,button{
+    padding:11px 16px; border-radius:10px; border:1px solid var(--border);
+    background:#12141d; color:var(--text); font-size:14px; cursor:pointer;
+  }
+  select{flex:1; min-width:140px}
+  button.primary{
+    flex:1; min-width:140px; border:none;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    color:#fff; font-weight:600; transition:opacity .2s;
+  }
+  button.primary:disabled{opacity:.6; cursor:not-allowed}
+  button.primary:not(:disabled):hover{opacity:.9}
+  .toggle-row{display:flex; align-items:center; gap:8px; margin-top:14px; font-size:13px; color:var(--muted)}
+  .toggle-row input{width:16px; height:16px; accent-color:var(--accent)}
+  .final-prompt{
+    margin-top:14px; padding:10px 12px; background:#12141d; border:1px dashed var(--border);
+    border-radius:10px; font-size:12px; color:var(--muted); line-height:1.7; display:none; direction:ltr; text-align:left;
+  }
+  .final-prompt b{color:var(--text)}
+  .result{margin-top:22px; text-align:center}
+  .result img{max-width:100%; border-radius:14px; display:block; margin:0 auto;
+    border:1px solid var(--border); background:#12141d;}
+  .placeholder{
+    height:280px; display:flex; align-items:center; justify-content:center;
+    color:var(--muted); font-size:14px; border:1px dashed var(--border);
+    border-radius:14px; margin-top:22px; flex-direction:column; gap:10px;
+  }
+  .spinner{
+    width:34px;height:34px;border-radius:50%;
+    border:3px solid var(--border); border-top-color:var(--accent);
+    animation:spin 1s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .note{margin-top:14px; font-size:12px; color:var(--muted); line-height:1.6}
+  a.dl{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    margin-top:18px; padding:14px 20px; font-size:16px; font-weight:700;
+    color:#fff; text-decoration:none; border-radius:12px;
+    background:linear-gradient(90deg,#22c55e,#16a34a);
+    box-shadow:0 8px 20px rgba(34,197,94,.35);
+    transition:transform .15s, box-shadow .15s;
+  }
+  a.dl:hover{transform:translateY(-2px); box-shadow:0 12px 26px rgba(34,197,94,.45)}
+  a.dl:active{transform:translateY(0)}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>عبدو جينيرايتور</h1>
+  <p class="sub">اكتب وصفًا للصورة (عربي أو إنجليزي)، اختر نمطًا، والموقع بيحسّن طلبك تلقائيًا قبل التوليد.</p>
 
+  <textarea id="prompt" placeholder="مثال: قطة فضائية ترتدي خوذة رائد فضاء تطفو بين النجوم"></textarea>
+
+  <label class="small">النمط الفني</label>
+  <div class="row">
+    <select id="style">
+      <option value="">تلقائي (بدون نمط محدد)</option>
+      <option value="ultra realistic photo, detailed, natural lighting">واقعي فوتوغرافي</option>
+      <option value="digital painting, concept art, dramatic lighting">فن رقمي</option>
+      <option value="anime style, vibrant colors, studio quality">أنمي</option>
+      <option value="oil painting, classical art style, textured brush strokes">لوحة زيتية</option>
+      <option value="3D render, octane render, cinematic lighting">رندر ثلاثي الأبعاد</option>
+      <option value="cartoon style, bold outlines, flat colors">كرتون</option>
+      <option value="watercolor painting, soft edges, pastel colors">ألوان مائية</option>
+    </select>
+    <select id="size">
+      <option value="1024x1024">مربع 1024×1024</option>
+      <option value="1280x720">عريض 1280×720</option>
+      <option value="720x1280">طولي 720×1280</option>
+    </select>
+  </div>
+
+  <div class="toggle-row">
+    <input type="checkbox" id="autoTranslate" checked>
+    <label for="autoTranslate">ترجمة الوصف العربي تلقائيًا للإنجليزية (يحسّن الدقة كثيرًا)</label>
+  </div>
+
+  <div class="row">
+    <button class="primary" id="genBtn">✨ توليد الصورة</button>
+  </div>
+
+  <div class="final-prompt" id="finalPromptBox"></div>
+
+  <div id="output">
+    <div class="placeholder">ستظهر الصورة الناتجة هنا</div>
+  </div>
+
+  <p class="note">
+    تُولَّد الصور عبر خدمة عامة مجانية (Pollinations AI) بدون مفتاح API.
+    الترجمة تتم عبر خدمة MyMemory المجانية. النتائج قد تختلف حتى لنفس الوصف.
+  </p>
+</div>
+
+<script>
+const promptEl = document.getElementById('prompt');
+const styleEl = document.getElementById('style');
+const sizeEl = document.getElementById('size');
+const autoTranslateEl = document.getElementById('autoTranslate');
+const btn = document.getElementById('genBtn');
+const output = document.getElementById('output');
+const finalPromptBox = document.getElementById('finalPromptBox');
+
+const QUALITY_BOOST = "highly detailed, high quality, sharp focus, 8k";
+
+function containsArabic(text){
+  return /[\u0600-\u06FF]/.test(text);
+}
+
+async function translateToEnglish(text){
+  try{
+    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=ar|en`);
+    const data = await res.json();
+    if(data && data.responseData && data.responseData.translatedText){
+      return data.responseData.translatedText;
+    }
+  }catch(e){
+    console.warn('translation failed, using original text', e);
+  }
+  return text;
+}
+
+btn.addEventListener('click', async () => {
+  const raw = promptEl.value.trim();
+  if(!raw){
+    output.innerHTML = '<div class="placeholder">من فضلك اكتب وصف الصورة أولاً</div>';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'جارٍ التحضير...';
+  output.innerHTML = `<div class="placeholder"><div class="spinner"></div>جاري تجهيز الوصف وتوليد الصورة...</div>`;
+
+  let workingText = raw;
+  if(autoTranslateEl.checked && containsArabic(raw)){
+    workingText = await translateToEnglish(raw);
+  }
+
+  const stylePart = styleEl.value ? `, ${styleEl.value}` : '';
+  const finalPrompt = `${workingText}${stylePart}, ${QUALITY_BOOST}`;
+
+  finalPromptBox.style.display = 'block';
+  finalPromptBox.innerHTML = `<b>الوصف المُرسَل للنموذج:</b><br>${finalPrompt}`;
+
+  const [w,h] = sizeEl.value.split('x');
+  const seed = Math.floor(Math.random()*1000000);
+  const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=${w}&height=${h}&seed=${seed}&nologo=true`;
+
+  btn.textContent = 'جارٍ التوليد...';
+
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = async () => {
+    output.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.className = 'result';
+    wrap.appendChild(img);
+
+    const link = document.createElement('a');
+    link.className = 'dl';
+    link.textContent = '⬇️ تحميل الصورة';
+    wrap.appendChild(link);
+    output.appendChild(wrap);
+
+    try{
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      link.href = blobUrl;
+      link.download = 'ai-image.png';
+    }catch(e){
+      link.href = url;
+      link.target = '_blank';
+      console.warn('blob download failed, falling back to direct link', e);
+    }
+
+    btn.disabled = false;
+    btn.textContent = '✨ توليد الصورة';
+  };
+  img.onerror = () => {
+    output.innerHTML = '<div class="placeholder">تعذّر توليد الصورة، حاول مرة أخرى</div>';
+    btn.disabled = false;
+    btn.textContent = '✨ توليد الصورة';
+  };
+  img.src = url;
+});
+</script>
+</body>
+  </html>
